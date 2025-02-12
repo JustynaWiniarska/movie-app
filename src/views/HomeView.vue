@@ -1,5 +1,6 @@
 <script setup>
 import { onMounted, ref } from 'vue'
+import { RouterLink } from 'vue-router'
 
 const apiKey = import.meta.env.VITE_API_KEY
 let movies = ref([])
@@ -10,6 +11,7 @@ const getMovies = async () => {
   const response = await fetch(`https://api.themoviedb.org/3/discover/movie?api_key=${apiKey}&include_video=false&language=en-US&page=1&sort_by=popularity.desc`)
   const data = await response.json()
   movies.value = data.results
+  console.log(movies.value)
 }
 
 onMounted(() => {
@@ -26,6 +28,10 @@ const searchMovies = async () => {
     movies.value = data.results
   }
 }
+
+// const selectMovie = () => {
+
+// }
 </script>
 
 <template>
@@ -56,18 +62,23 @@ const searchMovies = async () => {
       <div
         v-for="movie in movies"
         :key="movie.id"
-        class="border rounded p-4 flex"
       >
-        <div class="w-1/2">
-          <img :src="`https://image.tmdb.org/t/p/w500${movie.backdrop_path}`" />
-        </div>
-        <div class="pl-6 w-1/2">
-          <div >
-            <h2 class="title">{{ movie.title }}</h2>
-            <sub class="text-md">{{ movie.release_date }}</sub>
+        <RouterLink :to="'/movie/' + movie.id">
+          <div
+            class="border rounded p-4 flex hover:bg-gray-100"
+          >
+            <div class="w-1/2">
+              <img :src="`https://image.tmdb.org/t/p/w500${movie.backdrop_path}`" />
+            </div>
+            <div class="pl-6 w-1/2">
+              <div >
+                <h2 class="title">{{ movie.title }}</h2>
+                <sub class="text-md">{{ movie.release_date }}</sub>
+              </div>
+              <p>Rating: {{ movie.vote_average }}</p>
+            </div>
           </div>
-          <p>Rating: {{ movie.vote_average }}</p>
-        </div>
+        </RouterLink>
       </div>
     </div>
   </div>
