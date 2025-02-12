@@ -70,7 +70,7 @@ const searchMovies = async () => {
             class="border rounded p-4 flex hover:bg-gray-100"
           >
             <div class="w-1/2">
-              <img :src="`https://image.tmdb.org/t/p/w500${movie.backdrop_path}`" />
+              <img :src="`https://image.tmdb.org/t/p/w500${movie.backdrop_path}`" alt="Movie thumbnail" />
             </div>
             <div class="pl-6 w-1/2">
               <div >
