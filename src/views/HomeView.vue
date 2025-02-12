@@ -4,6 +4,7 @@ import { onMounted, ref } from 'vue'
 const apiKey = import.meta.env.VITE_API_KEY
 let movies = ref([])
 let inputValue = ref('')
+let showResultsDisclaimer = ref(false)
 
 const getMovies = async () => {
   const response = await fetch(`https://api.themoviedb.org/3/discover/movie?api_key=${apiKey}&include_video=false&language=en-US&page=1&sort_by=popularity.desc`)
@@ -18,7 +19,12 @@ onMounted(() => {
 const searchMovies = async () => {
   const response = await fetch(`https://api.themoviedb.org/3/search/movie?api_key=${apiKey}&query=${inputValue.value}`)
   const data = await response.json()
-  movies.value = data.results
+
+  if (data.results.length === 0) {
+    showResultsDisclaimer.value = true
+  } else {
+    movies.value = data.results
+  }
 }
 </script>
 
@@ -42,6 +48,10 @@ const searchMovies = async () => {
         type="submit"
       >Search</button>
 		</form>
+    <div
+      v-if="showResultsDisclaimer"
+      class="disclaimer"
+    >No movies were found.</div>
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:w-full">
       <div
         v-for="movie in movies"
@@ -76,6 +86,13 @@ button {
   background-color: teal;
   color: #fff;
   font-weight: bold;
+}
+.disclaimer {
+  color: red;
+  font-weight: bold;
+  letter-spacing: .1rem;
+  text-align: center;
+  margin-bottom: 16px;
 }
 .title {
   font-size: 20px;
