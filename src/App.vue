@@ -1,13 +1,5 @@
 <script setup>
 import {RouterView } from 'vue-router'
-const apiKey = import.meta.env.VITE_API_KEY
-
-fetch(`https://api.themoviedb.org/3/discover/tv?api_key=${apiKey}&include_adult=false&language=en-US&page=1&sort_by=popularity.desc`)
-  .then(response => response.json())
-  .then(data => console.log(data))
-  .catch(error => console.error(error));
-
-
 </script>
 
 <template>
