@@ -37,7 +37,6 @@ const searchMovies = async () => {
 			class="pb-6 w-full flex justify-between"
 			@submit.prevent="searchMovies"
 			@keydown.stop.enter.prevent="searchMovies"
-
 		>
       <input
         type="text"
@@ -67,14 +66,18 @@ const searchMovies = async () => {
             class="border rounded p-4 flex hover:bg-gray-100"
           >
             <div class="w-1/2">
-              <img :src="`https://image.tmdb.org/t/p/w500${movie.backdrop_path}`" alt="Movie thumbnail" />
+              <img v-if="movie.backdrop_path"
+                :src="`https://image.tmdb.org/t/p/w500${movie.backdrop_path}`"
+                alt="Movie thumbnail"
+              />
+              <img v-else src="/src/assets/thumbnail.png" alt="Placeholder image" class="placeholder-img" />
             </div>
             <div class="pl-6 w-1/2">
               <div >
                 <h2 class="title">{{ movie.title }}</h2>
                 <sub class="text-md">{{ movie.release_date }}</sub>
               </div>
-              <p>Rating: {{ movie.vote_average }}</p>
+              <p v-if="movie.vote_average">Rating: {{ movie.vote_average }}</p>
             </div>
           </div>
         </RouterLink>
@@ -108,5 +111,10 @@ button {
   font-size: 20px;
   line-height: 1;
   font-weight: bold;
+}
+.placeholder-img {
+  width: 100%;
+  height: auto;
+  object-fit: cover
 }
 </style>
