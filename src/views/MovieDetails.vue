@@ -7,6 +7,7 @@ const route = useRoute()
 const movieId = route.params.id
 
 const movieDetails = ref({})
+const calculatedRuntime = ref('')
 
 const getMovieDetails = async () => {
   try {
@@ -14,10 +15,23 @@ const getMovieDetails = async () => {
     const data = await response.json()
     console.log(data)
     movieDetails.value = data
+
+    if (data.runtime) {
+      calculateRuntime(data.runtime)
+    }
   }
   catch (e) {
     console.log('Error fetching movie details: ', e)
   }
+}
+
+const calculateRuntime = (num) => {
+  if (!num || isNaN(num)) return
+
+  const hours = Math.floor(num / 60)
+  const minutes = num % 60
+
+  calculatedRuntime.value = `${hours}h ${minutes}m`
 }
 
 onMounted(() => {
@@ -37,12 +51,14 @@ onMounted(() => {
         class="md:w-1/2"
       >
       <div class="md:w-1/2 md:px-6 pt-4 text-lg">
-        <p class="label">Plot overview:</p>
-        <p class="pb-4">{{ movieDetails.overview }}</p>
+        <div v-if="movieDetails.overview">
+          <p class="label">Plot overview:</p>
+          <p class="pb-4">{{ movieDetails.overview }}</p>
+        </div>
         <!-- Genres (Displayed under or beside the poster) -->
-        <p><span class="label">Rating:</span> {{ movieDetails.vote_average }}</p>
-        <!-- Runtime (Displayed in hours and minutes) -->
-        <p><span class="label">Language:</span> {{ movieDetails?.spoken_languages?.[0]?.english_name }}</p>
+        <p v-if="movieDetails.vote_average"><span class="label">Rating:</span> {{ movieDetails.vote_average }}</p>
+         <p v-if="movieDetails.runtime"><span class="label">Runtime: </span>{{ calculatedRuntime }}</p>
+        <p v-if="movieDetails.spoken_languages.length"><span class="label">Language:</span> {{ movieDetails?.spoken_languages?.[0]?.english_name }}</p>
       </div>
     </div>
   </div>
