@@ -3,15 +3,20 @@ import { onMounted, ref } from 'vue'
 import { RouterLink } from 'vue-router'
 
 const apiKey = import.meta.env.VITE_API_KEY
+const root = 'https://api.themoviedb.org/3'
 let movies = ref([])
 let inputValue = ref('')
 let showResultsDisclaimer = ref(false)
 
 const getMovies = async () => {
-  const response = await fetch(`https://api.themoviedb.org/3/discover/movie?api_key=${apiKey}&include_video=false&language=en-US&page=1&sort_by=popularity.desc`)
-  const data = await response.json()
-  movies.value = data.results
-  console.log(movies.value)
+  try {
+    const response = await fetch(`${root}/discover/movie?api_key=${apiKey}&include_video=false&language=en-US&page=1&sort_by=popularity.desc`)
+    const data = await response.json()
+    movies.value = data.results
+  }
+  catch (e) {
+    console.error('Error fetching popular movies: ', e)
+  }
 }
 
 onMounted(() => {
@@ -19,13 +24,19 @@ onMounted(() => {
 })
 
 const searchMovies = async () => {
-  const response = await fetch(`https://api.themoviedb.org/3/search/movie?api_key=${apiKey}&query=${inputValue.value}`)
-  const data = await response.json()
+  try {
+    const response = await fetch(`${root}/search/movie?api_key=${apiKey}&query=${inputValue.value}`)
+    const data = await response.json()
 
-  if (data.results.length === 0) {
-    showResultsDisclaimer.value = true
-  } else {
-    movies.value = data.results
+    if (data.results.length === 0) {
+      showResultsDisclaimer.value = true
+      getMovies()
+    } else {
+      movies.value = data.results
+    }
+  }
+  catch (e) {
+    console.error('Error getting searched data: ', e)
   }
 }
 </script>
@@ -54,6 +65,7 @@ const searchMovies = async () => {
       class="disclaimer"
     >
       <p>No movies for this search term were found.</p>
+      <p>Look at the list of the popular movies below.</p>
     </div>
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:w-full">
       <div
