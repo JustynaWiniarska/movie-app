@@ -28,10 +28,6 @@ const searchMovies = async () => {
     movies.value = data.results
   }
 }
-
-// const selectMovie = () => {
-
-// }
 </script>
 
 <template>
@@ -58,7 +54,8 @@ const searchMovies = async () => {
       v-if="showResultsDisclaimer"
       class="disclaimer"
     >
-      No movies were found.
+      <p>No movies for this search term were found.</p>
+      <p>Below is the list of polular movies.</p>
     </div>
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:w-full">
       <div
