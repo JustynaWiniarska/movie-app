@@ -57,13 +57,15 @@ const searchMovies = async () => {
     <div
       v-if="showResultsDisclaimer"
       class="disclaimer"
-    >No movies were found.</div>
+    >
+      No movies were found.
+    </div>
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:w-full">
       <div
         v-for="movie in movies"
         :key="movie.id"
       >
-        <RouterLink :to="'/movie/' + movie.id">
+        <RouterLink :to="'/movies/' + movie.id">
           <div
             class="border rounded p-4 flex hover:bg-gray-100"
           >
