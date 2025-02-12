@@ -4,11 +4,8 @@
 - npm install
 - npm run dev
 
-##### Run Unit Tests with [Vitest](https://vitest.dev/)
+#### To Run Unit Tests:
+- npm run test:unit
 
-npm run test:unit
 
-##### Lint with [ESLint](https://eslint.org/)
-
-npm run lint
 

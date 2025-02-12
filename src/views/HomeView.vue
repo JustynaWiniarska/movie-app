@@ -88,7 +88,7 @@ const searchMovies = async () => {
                 <h2 class="title">{{ movie.title }}</h2>
                 <sub class="text-md">{{ movie.release_date }}</sub>
               </div>
-              <p v-if="movie.vote_average">Rating: {{ movie.vote_average }}</p>
+              <p v-if="movie.vote_average">Rating: {{ movie.vote_average.toFixed(2) }}</p>
             </div>
           </div>
         </RouterLink>
