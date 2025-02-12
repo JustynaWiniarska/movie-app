@@ -50,19 +50,24 @@ onMounted(() => {
     <h1 class="movie-title">{{ movieDetails.title }}</h1>
     <p class="text-center pb-6">Released: {{ movieDetails.release_date }}</p>
     <div class="md:flex md:justify-between">
-
       <img
+        v-if="movieDetails.poster_path"
         :src="`https://image.tmdb.org/t/p/w500${movieDetails.poster_path}`"
         alt="Movie poster"
         class="md:w-1/2"
       >
-      <div class="md:w-1/2 md:px-6 pt-4 text-lg">
+      <div
+        :class="[
+          'md:w-1/2 md:px-6 pt-4 text-lg',
+          {'centered': !movieDetails.poster_path}
+        ]"
+      >
         <div v-if="movieDetails.overview">
           <p class="label">Plot overview:</p>
           <p class="pb-4">{{ movieDetails.overview }}</p>
         </div>
         <p v-if="movieDetails.genres?.length"><span class="label">Genres:</span> {{ genresList }}</p>
-        <p v-if="movieDetails.vote_average"><span class="label">Rating:</span> {{ movieDetails.vote_average }}</p>
+        <p v-if="movieDetails.vote_average"><span class="label">Rating:</span> {{ movieDetails.vote_average.toFixed(2) }}</p>
         <p v-if="movieDetails.runtime"><span class="label">Runtime: </span>{{ calculatedRuntime }}</p>
         <p v-if="movieDetails.spoken_languages?.length"><span class="label">Language:</span> {{ movieDetails?.spoken_languages?.[0]?.english_name }}</p>
       </div>
@@ -75,6 +80,9 @@ onMounted(() => {
   text-align: center;
   font-size: 26px;
   font-weight: bold;
+}
+.centered {
+  margin: auto;
 }
 img {
   margin: auto;
