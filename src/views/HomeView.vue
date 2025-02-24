@@ -1,5 +1,5 @@
 <script setup>
-import { onMounted, ref } from 'vue'
+import { onMounted, ref, computed } from 'vue'
 import { RouterLink } from 'vue-router'
 
 const apiKey = import.meta.env.VITE_API_KEY
@@ -7,6 +7,7 @@ const root = 'https://api.themoviedb.org/3'
 let movies = ref([])
 let inputValue = ref('')
 let showResultsDisclaimer = ref(false)
+const topRated = ref(false)
 
 const getMovies = async () => {
   try {
@@ -33,12 +34,40 @@ const searchMovies = async () => {
       getMovies()
     } else {
       movies.value = data.results
+      showResultsDisclaimer.value = false
     }
   }
   catch (e) {
     console.error('Error getting searched data: ', e)
   }
 }
+
+const toggleBtnLabel = computed(() => {
+  return topRated.value ? 'Show Popular Movies' :  'Show Top Rated Movies'
+})
+
+const toggleTopRated = async () => {
+  let movieType = ''
+
+    if (topRated.value === true) {
+      movieType = 'popular'
+      topRated.value = false
+    } else {
+      movieType = 'top_rated'
+      topRated.value = true
+    }
+
+  try {
+    const response = await fetch(`${root}/movie/${movieType}?api_key=${apiKey}`)
+    const data = await response.json()
+    movies.value = data.results
+  }
+  catch (e) {
+    console.error(e)
+  }
+}
+
+
 </script>
 
 <template>
@@ -67,7 +96,12 @@ const searchMovies = async () => {
       <p>No movies for this search term were found.</p>
       <p>Look at the list of the popular movies below.</p>
     </div>
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:w-full">
+
+    <button
+      class="p-2 border rounded"
+      @click="toggleTopRated"
+    >{{ toggleBtnLabel }}</button>
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:w-full pt-8">
       <div
         v-for="movie in movies"
         :key="movie.id"
